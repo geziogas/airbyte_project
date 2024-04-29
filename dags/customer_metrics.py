@@ -60,15 +60,15 @@ def customer_metrics():
     def quality_checks_done():
         return True
 
-    # publish = DbtTaskGroup(
-    #     group_id='publish',
-    #     project_config=DBT_PROJECT_CONFIG,
-    #     profile_config=DBT_CONFIG,
-    #     render_config=RenderConfig(
-    #         load_method=LoadMode.DBT_LS,
-    #         select=['path:models']
-    #     )
-    # )    
+    publish = DbtTaskGroup(
+        group_id='publish',
+        project_config=DBT_PROJECT_CONFIG,
+        profile_config=DBT_CONFIG,
+        render_config=RenderConfig(
+            load_method=LoadMode.DBT_LS,
+            select=['path:models']
+        )
+    )    
 
     chain(
         [load_customer_transactions_raw, load_labeled_transactions_raw],
@@ -76,7 +76,7 @@ def customer_metrics():
         airbyte_jobs_done(),
         [audit_customer_transactions(), audit_labeled_transactions()],
         quality_checks_done(),
-        # publish,
+        publish
     )
 
 customer_metrics()
